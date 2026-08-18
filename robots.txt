@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chumicro.github.io/sitemap.xml
+Sitemap: https://chumicro.com/sitemap.xml

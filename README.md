@@ -1,6 +1,6 @@
 # chumicro.github.io
 
-The page at https://chumicro.github.io/ and the files that describe this host to search
+The page at https://chumicro.com/ and the files that describe this host to search
 engines: `robots.txt`, `sitemap.xml`, `llms.txt`, the ownership tokens
 both engines fetch, and the IndexNow key.
 
@@ -13,7 +13,7 @@ next deploy, so change the generator instead.
 
 ## What publishes below this page
 
-- [ChuMicro](https://chumicro.github.io/ChuMicro/), built from [ChuMicro/ChuMicro](https://github.com/ChuMicro/ChuMicro)
+- [ChuMicro](https://chumicro.com/ChuMicro/), built from [ChuMicro/ChuMicro](https://github.com/ChuMicro/ChuMicro)
 
 Each project repository serves its own path on this host and keeps its
 own documentation.  Never add a folder here named after one of them:
