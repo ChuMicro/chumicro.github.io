@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ChuMicro: open-source Python for CircuitPython and MicroPython boards</title>
-  <meta name="description" content="ChuMicro builds Python libraries and host tools for microcontrollers. WiFi, MQTT, HTTP, WebSockets, timers, and storage for CircuitPython, MicroPython, and CPython, plus the workbench that deploys them.">
+  <meta name="description" content="ChuMicro builds Python libraries and host tools for microcontrollers. Keep a status LED blinking while wifi reconnects, on CircuitPython, MicroPython, and CPython.">
   <link rel="canonical" href="https://chumicro.com/">
   <meta name="google-site-verification" content="UCEDEyKktM5wid6khQHCNlz5lEtV3NQzx0TIH0KbNTI">
   <meta name="msvalidate.01" content="3E22A915EA94D7FABDA63539A46B134D">
@@ -13,8 +13,8 @@
   <meta property="og:title" content="ChuMicro: open-source Python for microcontrollers">
   <meta property="og:description" content="Python libraries and host tools for CircuitPython, MicroPython, and CPython boards.">
   <meta property="og:url" content="https://chumicro.com/">
-  <meta property="og:image" content="https://raw.githubusercontent.com/ChuMicro/ChuMicro/main/support/docs/chumicro.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://chumicro.com/assets/chumicro.png">
+  <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -25,7 +25,7 @@
           "name": "ChuMicro",
           "url": "https://chumicro.com/",
           "description": "Open-source Python libraries and host tools for microcontrollers running CircuitPython, MicroPython, and CPython.",
-          "logo": "https://raw.githubusercontent.com/ChuMicro/ChuMicro/main/support/docs/chumicro.png",
+          "logo": "https://chumicro.com/assets/chumicro.png",
           "sameAs": [
             "https://github.com/ChuMicro",
             "https://pypi.org/search/?q=chumicro"
@@ -52,7 +52,7 @@
       ]
     }
   </script>
-  <link rel="icon" href="/ChuMicro/assets/images/favicon.png">
+  <link rel="icon" href="https://chumicro.com/assets/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -63,6 +63,7 @@
       --text: #e6edf3;
       --muted: #8b949e;
       --accent: #e87518;
+      --accent-hover: #f0a050;
       --border: #2a1e10;
       --tag-bg: #1e1208;
       --tag-text: #e8d296;
@@ -77,9 +78,10 @@
       background: var(--bg); color: var(--text);
       font-size: 1rem; line-height: 1.75;
     }
-    .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 2rem; }
 
-    header { text-align: center; padding: 3rem 0 2rem; }
+    header { text-align: center; padding: 2.5rem 0 1.5rem; }
+    header img.hero { width: 200px; height: auto; margin: 0 auto .75rem; display: block; }
     header h1 { font-size: 2em; font-weight: 700; margin-bottom: .5rem; }
     header p { font-size: 1.1rem; color: var(--muted); max-width: 620px; margin: 0 auto; }
     .badges { margin-top: 1rem; display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
@@ -90,6 +92,16 @@
     .badge-cream { background: var(--tag-bg); color: var(--tag-text); }
     .badge-amber { background: var(--green-bg); color: var(--green-text); }
     .badge-orange { background: var(--orange-bg); color: var(--orange-text); }
+
+    .actions { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+    .action {
+      display: inline-block; padding: .55rem 1.1rem; border-radius: .5rem;
+      font-size: .95rem; font-weight: 600; text-decoration: none;
+      border: 1px solid var(--border); color: var(--text); background: var(--card-bg);
+    }
+    .action:hover { border-color: var(--accent); color: var(--accent); }
+    .action-primary { background: var(--accent); border-color: var(--accent); color: #1a1005; }
+    .action-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #1a1005; }
 
     .section { margin: 2.5rem 0; }
     .section-heading { font-size: 1.4rem; margin-bottom: .35rem; }
@@ -120,20 +132,76 @@
     }
     .package-list a:hover { text-decoration: underline; }
 
+    /* Take part: the artwork sits beside the words, the way it does in
+       CONTRIBUTING.md, so the two pages read as one project. */
+    .takepart { overflow: hidden; }
+    .takepart img {
+      width: 72px; height: auto; float: left;
+      margin: .2rem 1.1rem .5rem 0;
+    }
+    .takepart p { color: var(--muted); font-size: .95rem; margin-bottom: .85rem; }
+    .takepart p:last-of-type { margin-bottom: 0; }
+
     footer { text-align: center; padding: 2rem 0 3rem; color: var(--muted); font-size: .9rem; }
     footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      header img.hero { width: 150px; }
+    }
   </style>
 </head>
 <body>
+  <style>
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      background: rgba(14, 15, 16, .92);
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: saturate(140%) blur(6px);
+    }
+    .topbar-inner {
+      max-width: 860px; margin: 0 auto; padding: .6rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .topbar .wordmark {
+      display: flex; align-items: center; gap: .5rem;
+      font-weight: 700; color: var(--text); text-decoration: none;
+      margin-right: auto;
+    }
+    .topbar .wordmark img { width: 28px; height: 28px; border-radius: 50%; }
+    .topbar a.nav { color: var(--muted); text-decoration: none; font-size: .92rem; font-weight: 600; }
+    .topbar a.nav:hover { color: var(--accent); }
+    .topbar a.nav-strong { color: var(--accent); }
+    @media (max-width: 520px) { .topbar .wordmark span { display: none; } }
+  </style>
+  <nav class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="https://chumicro.com/">
+        <img src="https://chumicro.com/assets/chumicro-head.png" alt="">
+        <span>ChuMicro</span>
+      </a>
+      <a class="nav" href="https://chumicro.com/ChuMicro/">Documentation</a>
+      <a class="nav" href="https://chumicro.com/ChuMicro/guides/">Guides</a>
+      <a class="nav" href="https://pypi.org/search/?q=chumicro">PyPI</a>
+      <a class="nav nav-strong" href="https://github.com/ChuMicro">GitHub</a>
+    </div>
+  </nav>
+
+
   <div class="container">
     <header>
+      <img class="hero" src="https://chumicro.com/assets/chumicro.png" alt="ChuMicro">
       <h1>ChuMicro</h1>
-      <p>Open-source Python for microcontrollers. Libraries that keep your main loop running while the network is slow, and host tools that get them onto a board.</p>
+      <p>Python libraries for microcontrollers that keep your main loop running, and the host tools that get them onto a board. Unplug your router and your status LED keeps blinking while wifi reconnects on its own.</p>
       <div class="badges">
         <span class="badge badge-cream">CircuitPython</span>
         <span class="badge badge-amber">MicroPython</span>
         <span class="badge badge-orange">CPython</span>
+      </div>
+      <div class="actions">
+        <a class="action action-primary" href="https://chumicro.com/ChuMicro/">Read the documentation</a>
+        <a class="action" href="https://github.com/ChuMicro/ChuMicro">Source on GitHub</a>
+        <a class="action" href="https://github.com/ChuMicro/ChuMicro-Workbench-Template">Start your own project</a>
       </div>
     </header>
 
@@ -142,7 +210,7 @@
       <p class="section-description">Everything published under this organization.</p>
       <article class="card">
         <h3><a href="https://chumicro.com/ChuMicro/">ChuMicro</a></h3>
-        <p>Python libraries for microcontrollers that never freeze your program, plus the host tools that deploy them.  One codebase runs on CircuitPython, MicroPython, and CPython.</p>
+        <p>Wifi, MQTT, HTTP client and server, WebSockets, network time, timers, settings, and storage that survives a reboot, plus the host tools that deploy them and watch a board.  One codebase runs on CircuitPython, MicroPython, and CPython.</p>
         <p class="links">
           <a href="https://chumicro.com/ChuMicro/">Documentation</a>
           <a href="https://chumicro.com/ChuMicro/guides/">Guides</a>
@@ -179,6 +247,19 @@
         <li><a href="https://chumicro.com/ChuMicro/deploy/stable/">chumicro-deploy</a> Host-side device transports and deploy tooling for CircuitPython and MicroPython boards.</li>
         <li><a href="https://chumicro.com/ChuMicro/repl/stable/">chumicro-repl</a> Host-side serial REPL for CircuitPython and MicroPython boards with traceback highlighting.</li>
       </ul>
+    </section>
+
+    <section class="section takepart">
+      <h2 class="section-heading">Come and build something</h2>
+      <img src="https://chumicro.com/assets/chumicro-head.png" alt="">
+      <p>There are several ways to be part of this, and writing code is only one of them. Using a library and saying what happened helps, especially on a board nobody here has tried yet. So does telling us when an error message made no sense, or asking a question the guides should have answered.</p>
+      <p>If you want to start your own thing, the workbench template is a whole project to copy: it deploys your code to a board, keeps track of your devices, installs firmware, and runs your tests. Press "Use this template" and it is yours.</p>
+      <p>If you want to change the libraries themselves, the contributing guide walks the whole path, and one command runs every check that CI runs.</p>
+      <div class="actions" style="justify-content: flex-start;">
+        <a class="action action-primary" href="https://github.com/ChuMicro/ChuMicro-Workbench-Template">Use the template</a>
+        <a class="action" href="https://chumicro.com/ChuMicro/guides/contributing/cheat-sheet/">Contributor cheat sheet</a>
+        <a class="action" href="https://github.com/ChuMicro/ChuMicro/issues">Open an issue</a>
+      </div>
     </section>
 
     <footer>

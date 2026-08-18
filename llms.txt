@@ -4,7 +4,7 @@
 
 ## Projects
 
-- [ChuMicro](https://chumicro.com/ChuMicro/): Python libraries for microcontrollers that never freeze your program, plus the host tools that deploy them.  One codebase runs on CircuitPython, MicroPython, and CPython.
+- [ChuMicro](https://chumicro.com/ChuMicro/): Wifi, MQTT, HTTP client and server, WebSockets, network time, timers, settings, and storage that survives a reboot, plus the host tools that deploy them and watch a board.  One codebase runs on CircuitPython, MicroPython, and CPython.
 
 ## Optional
 
