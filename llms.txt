@@ -1,0 +1,12 @@
+# ChuMicro
+
+> Open-source Python libraries and host tools for microcontrollers.  One codebase runs on CircuitPython, MicroPython, and CPython.
+
+## Projects
+
+- [ChuMicro](https://chumicro.github.io/ChuMicro/): Python libraries for microcontrollers that never freeze your program, plus the host tools that deploy them.  One codebase runs on CircuitPython, MicroPython, and CPython.
+
+## Optional
+
+- [ChuMicro library and tool index](https://chumicro.github.io/ChuMicro/llms.txt): every package with a one-line description and its documentation address.
+- [Source on GitHub](https://github.com/ChuMicro): every public repository.
